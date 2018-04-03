@@ -1,0 +1,16 @@
+the google trends game app
+
+☐ have a button at the top to go to the rules section.
+☐ make a github pages page for my account so i can redirect to that in the footer
+☐ It automatically queries Google trends via a browserfyied node api and puts the numbers on the the page.
+
+ui:
+  ☐ a checkbox to enable the google trends popup
+  ☐ a button to edit the terms after they've been submitted
+  ☐ the ablitity to have more than 2 teams
+  ☐ a points multiplier field
+  ☐ make the top thing smaller when you scroll down
+  ☐ Those numbers should copy to clipboard when you click them.
+  ☐ Next to each result there should be a goto URL.
+  ☐ The scores should be auto added and appear at the bottom of the page.
+  ☐ You should be able to add extra score before final add
