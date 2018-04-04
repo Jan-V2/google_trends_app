@@ -14,3 +14,10 @@ ui:
   ☐ Next to each result there should be a goto URL.
   ☐ The scores should be auto added and appear at the bottom of the page.
   ☐ You should be able to add extra score before final add
+  ☐ zorg dat de content in het game ding in het midden van de pagina blijft als je niet in firefox zit
+  ☐ make a message pop up when someone's on mobile telling them to use the app?
+  ☐ save the gamestate with a cookie
+
+
+notes:
+  removed map url from vendor/bootstrap/css/bootstrap.min.css to supress warning.
