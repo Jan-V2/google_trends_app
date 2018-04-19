@@ -6,6 +6,7 @@ var rename = require("gulp-rename");
 var uglify = require('gulp-uglify');
 var pkg = require('./package.json');
 var browserSync = require('browser-sync').create();
+const webpack = require('webpack-stream');
 
 // Set the banner content
 var banner = ['/*!\n',
@@ -91,9 +92,11 @@ gulp.task('js:minify', function() {
       '!./js/*.min.js'
     ])
     .pipe(uglify())
+
     .pipe(rename({
       suffix: '.min'
     }))
+      //.pipe(webpack())
     .pipe(gulp.dest('./js'))
     .pipe(browserSync.stream());
 });

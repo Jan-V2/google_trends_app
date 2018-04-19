@@ -1,0 +1,47 @@
+
+<div style="width: 700px">
+    <!--this minwidth means this won't work on mobile phones-->
+    <div id="message_div"  style="width: 100%;" ></div>
+    <div class="row">
+        <div class="col-md-3" >
+            <button type="button" class="btn btn-success btn-lg" id="add_team" style="width: 100%;">Add team</button>
+        </div>
+        <div id="teams" class="col-md-7" style="padding-right: 0px;" >
+
+        </div>
+        <div class="col-md-2" >
+            <span>right</span>
+        </div>
+
+    </div>
+    <script >
+        //input thing js
+        let defaultText = 'Click me and enter some text';
+
+        function endEdit(e) {
+            let input = $(e.target),
+                label = input && input.prev();
+
+            label.text(input.val() === '' ? defaultText : input.val());
+            input.hide();
+            label.show();
+        }
+
+        function hide_inputs(){
+            $('.clickedit').hide()
+                .focusout(endEdit)
+                .keyup(function (e) {
+                    if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+                        endEdit(e);
+                        return false;
+                    } else {
+                        return true;
+                    }
+                })
+                .prev().click(function () {
+                $(this).hide();
+                $(this).next().show().focus();
+            });
+        }
+    </script>
+</div>

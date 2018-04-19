@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <script src="vue.js"></script>
+  <script src="trends_game/libs/jquery-3.3.1.min.js"></script>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -51,52 +51,18 @@
 
 
 
-<!-- component template -->
-<script type="text/x-template" id="grid-template">
-  <div>
-    <form id="add_elem">
-      <input ref="new_name" placeholder="name">
-      <input ref="new_power"  placeholder="power">
-      <button  @click.prevent="add_item()" class="btn btn-primary btn-sm">add thing</button>
-    </form>
-    <table>
-      <thead>
-      <tr>
-        <th v-for="key in columns"
-            @click="sortBy(key)"
-            :class="{ active: sortKey == key }">
-          {{ key | capitalize }}
-          <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
-          </span>
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="entry in filteredData">
-        <td v-for="key in columns">
-          {{entry[key]}}
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-</script>
 
 <!-- demo root element -->
 <div id="game" class="pt-5" style="margin: auto; width: -moz-fit-content;">
 
-  <form id="search">
-    Search <input name="query" v-model="searchQuery">
-  </form>
-  <demo-grid
-          :data="gridData"
-          :columns="gridColumns"
-          :filter-key="searchQuery">
-  </demo-grid>
+
 </div>
 
+<link href="trends_game/game.css" rel="stylesheet" type="text/css">
 
-<script src="trends_game_vue.js"></script>
+<script src="trends_game/components/small_components.js"></script>
+<script src="trends_game/utils.js"></script>
+<script src="trends_game/game.js"></script>
 
 
 

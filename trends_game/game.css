@@ -1,0 +1,6 @@
+label:hover {
+    background: #f2f5ff;
+    border-radius:8px;
+    padding:2px 4px;
+    transform: translate(0px, -2px);
+}

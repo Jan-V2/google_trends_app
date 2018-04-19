@@ -26,13 +26,15 @@
         "url": "https://github.com/BlackrockDigital/startbootstrap-freelancer.git"
     },
     "dependencies": {
-        "bootstrap": "4.0.0",
         "font-awesome": "4.7.0",
-        "jquery": "3.3.1",
         "jquery.easing": "^1.4.1",
-        "magnific-popup": "^1.1.0"
+        "magnific-popup": "^1.1.0",
+        "react": "^16.3.2",
+        "react-dom": "^16.3.2",
+        "webpack-stream": "^4.0.3"
     },
     "devDependencies": {
+        "bootstrap": "^4.0.0-beta",
         "browser-sync": "2.23.6",
         "gulp": "^3.9.1",
         "gulp-clean-css": "3.9.2",
@@ -40,6 +42,10 @@
         "gulp-header": "2.0.1",
         "gulp-rename": "^1.2.2",
         "gulp-sass": "^3.1.0",
-        "gulp-uglify": "3.0.0"
+        "gulp-uglify": "3.0.0",
+        "jquery": "^3.3.1",
+        "popper.js": "^1.14.3",
+        "webpack": "^4.6.0",
+        "webpack-cli": "^2.0.14"
     }
 }
