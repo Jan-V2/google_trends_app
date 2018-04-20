@@ -21,3 +21,10 @@ ui:
 
 notes:
   removed map url from vendor/bootstrap/css/bootstrap.min.css to supress warning.
+
+startscreen:
+  ☐ zorg ervoor dat elk team een eigen kleur heeft
+
+gamescreen:
+  ☐ add the api lib with webpack
+  ☐ figure out de layout. zorg ervoor dat je 1 layout hebt voor 1 tot 4 teams.S
