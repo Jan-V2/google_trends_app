@@ -74,6 +74,14 @@ function start_screen() {
 
 function game_screen(teams){
     gamediv.html(gamescreen_html);
+    let search_btn = $("#search");
+    let search_term = $("#term");
+    let search_output = $("#output");
+
+    search_btn.click(() => {
+
+    });
+
     teams.forEach((team) => {
         gamediv.append(`<span>${team.num} ${team.name}</span>`);
         gamediv.append(comps.get_clearfix());
