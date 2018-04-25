@@ -1,7 +1,8 @@
-let gamediv = $("#game");
-let startscreen_html = httpGet("/trends_game/components/start_screen.html");
-let gamescreen_html = httpGet("/trends_game/components/game_screen.html");
-let comps = new Startscreen_components();
+
+const gamediv = $("#game");
+const startscreen_html = httpGet("/trends_game/components/start_screen.html");
+const gamescreen_html = httpGet("/trends_game/components/game_screen.html");
+const comps = new Startscreen_components();
 
 const startscreen_consts = {
     default_teamname: "Click to edit teamname"
@@ -71,6 +72,10 @@ function start_screen() {
     });
 
 }
+
+const gamescreen_consts = {
+
+};
 
 function game_screen(teams){
     gamediv.html(gamescreen_html);

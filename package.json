@@ -3,6 +3,7 @@
     "name": "startbootstrap-freelancer",
     "version": "4.0.0",
     "description": "A freelancer portfolio HTML theme for Bootstrap.",
+    "private": true,
     "keywords": [
         "css",
         "sass",
@@ -28,6 +29,7 @@
     "dependencies": {
         "font-awesome": "4.7.0",
         "jquery.easing": "^1.4.1",
+        "lodash": "^4.17.5",
         "magnific-popup": "^1.1.0",
         "react": "^16.3.2",
         "react-dom": "^16.3.2",
