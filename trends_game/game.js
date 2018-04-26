@@ -16,7 +16,6 @@ function start_screen() {
     let start_game_btn = $("#start_game");
     let team_id_counter = 0;
     let max_teams = 4;
-
     //todo team colors
 
     function add_team(){
