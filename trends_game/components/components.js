@@ -48,6 +48,35 @@ function Startscreen_components() {
         return `<div class="clearfix"></div>`
     };
 
+    this.game = new function () {
+
+        this.table_head = () => {
+
+        };
+
+        this.table_row = (team) => {
+
+        };
+
+        this.query_form = function(num_teams) {
+            let colsize = 12;
+            colsize = colsize / num_teams;
+            let inner_html = ``;
+            for (let i in _.range(num_teams)){
+                inner_html += `<input type="text" class="col-${colsize}" name="term_${i}"/>`
+            }
+            return `
+             <form id="queries_form">
+             <div class="row">
+               <div class="row col-10">
+                 ${inner_html}
+               </div> 
+                <button type="submit" class="btn btn-primary col-2" id="search">Search</button>
+                </div>
+             </form>`
+        };
+    }();
+
 }
 
 
