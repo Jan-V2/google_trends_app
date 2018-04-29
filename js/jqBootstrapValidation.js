@@ -797,7 +797,7 @@
 				name: "Passwordagain",
 				type: "match",
 				match: "password",
-				message: "Does not match the given password<!-- data-validator-paswordagain-message to override -->"
+				message: "Does not text the given password<!-- data-validator-paswordagain-message to override -->"
 			},
 			positive: {
 				name: "Positive",
