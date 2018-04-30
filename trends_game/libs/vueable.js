@@ -1,6 +1,6 @@
 function Vueable() {
-    let atom_re = /(\s*%(.*?)=>)\s*</;
-    let html_elem_re = /<\w+/; //todo text closing tag as well.
+    let open_tag_re = /<\w+[> ]/; //todo text closing tag as well.
+    let atom_re = new RegExp(/(\s*%([^\n]*?)=>)\s*/.source + open_tag_re.source);
 
     function Atom(match, index) {
         this.text = match;
@@ -41,7 +41,7 @@ function Vueable() {
             }
             atoms.reverse();
             atoms.forEach((atom) => {
-                let tag = /<\w+[> ]/.exec(template.slice(atom.index));
+                let tag = open_tag_re.exec(template.slice(atom.index));
                 let index;
                 if (tag !== null){
                     index = atom.index + tag.index + tag[0].length -1;

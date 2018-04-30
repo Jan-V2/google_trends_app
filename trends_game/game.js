@@ -8,150 +8,118 @@ r_async.parallel([
     () => {startscreen_html = httpGet("/trends_game/components/start_screen.html")},
     () => {startscreen_templ = httpGet("/trends_game/components/start_screen.vueable")},
     () => {gamescreen_html = httpGet("/trends_game/components/game_screen.html")}
-    ]);
+]);
 let parser = new Vueable();
-const comps = new Startscreen_components();
 
 const startscreen_consts = {
     default_teamname: "Click to edit teamname"
 };
+
 // console.log(startscreen_templ);
 let parsed = parser.parse(startscreen_templ);
 // console.log(parsed);
 
 Vue.component('start_screen', {
     template: parsed,
-    props: {
-        data: Array,
-        columns: Array,
-        filterKey: String
-    },
     data: function () {
-        var sortOrders = {}
-        this.columns.forEach(function (key) {
-            sortOrders[key] = 1
-        })
         return {
-            sortKey: '',
-            sortOrders: sortOrders
+            teams: [],
+            default_teamname: startscreen_consts.default_teamname,
+            t_input_id: "t_input_",
+            max_teams: 4,
+            team_id_counter: 0,
+            active: true,
+            alert_templ: new Global_Comps()
+
         }
     },
-    computed: {
-        filteredData: function () {
-            var sortKey = this.sortKey
-            var filterKey = this.filterKey && this.filterKey.toLowerCase()
-            var order = this.sortOrders[sortKey] || 1
-            var data = this.data
-            if (filterKey) {
-                data = data.filter(function (row) {
-                    return Object.keys(row).some(function (key) {
-                        return String(row[key]).toLowerCase().indexOf(filterKey) > -1
-                    })
-                })
-            }
-            if (sortKey) {
-                data = data.slice().sort(function (a, b) {
-                    a = a[sortKey]
-                    b = b[sortKey]
-                    return (a === b ? 0 : a > b ? 1 : -1) * order
-                })
-            }
-            return data
-        }
-    },
-    filters: {
-        capitalize: function (str) {
-            return str.charAt(0).toUpperCase() + str.slice(1)
-        }
+    mounted: function(){
+        this.add_team();
     },
     methods: {
-        sortBy: function (key) {
-            this.sortKey = key
-            this.sortOrders[key] = this.sortOrders[key] * -1
+        add_team: function (){
+            if (this.teams.length >= this.max_teams){
+                this.show_msg(this.alert_templ.get_alert_info("You can only have up to "+this.max_teams+" teams."))
+            }else{
+                this.teams.push(this.team_id_counter);
+                this.team_id_counter++;
+            }
+        },
+        start_game: function() {
+            //todo refactor this
+            let teams = [];
+            let team_names_labels = $("label.team_name_label").toArray();
+
+            function Team(num, name){
+                this.num = num;
+                this.name = name
+            }
+
+            let _continue = true;
+            team_names_labels.forEach((label) => {
+                if (_continue){
+                    let team_num = label.parentElement.parentElement.id.replace("team_row_", "");
+                    let team_name = label.textContent;
+                    if (team_name === startscreen_consts.default_teamname ){
+                        _continue = false;
+                    }else{
+                        teams.push(new Team(team_num, team_name))
+                    }
+                }
+            });
+            // right now 2 teams can have the same name since they're identified by their number
+            if (_continue){
+                game_screen(teams);
+                this.active = false;
+            }else{
+                this.show_msg(this.alert_templ.get_alert_warning("All teams must set their name before starting the game."));
+            }
+        },
+        update_teamname: _.debounce(function(event){
+            let id;
+            try{
+                id = + event.target.id.replace(this.t_input_id, "")
+            }catch{
+                this.show_msg(this.template.global.get_alert_danger("could not update team name. id parse failed."));
+                return;
+            }
+            let get_team_num = (team) => {return team.num};
+            let did_update = false;
+            this.teams.forEach((t) => {
+                if (!did_update && get_team_num(t) === +id){
+                    t.name = event.target.textContent;
+                    did_update = true;
+                }
+            });
+            if (!did_update){
+                this.show_msg(this.alert_templ.get_alert_danger("could not update team name. could not find team with id "+id+"."));
+            }
+        }, 200),
+        delete_team: function(team_num){
+            let _t = this.teams;
+            let team_idx = _t.indexOf(+ team_num);
+            if (team_idx > -1){
+                _t.splice(_t.splice(team_idx, 1))
+            }else{
+                this.show_msg(this.alert_templ.get_alert_warning("Can't delete team, doesn't seem to exist."))
+            }
+        },
+        show_msg: function(msg_html) {
+            $("#message_div").html(msg_html)
+        },
+        get_new_team: function(team_num) {
+            return {
+                num: team_num,
+                name: this.default_teamname
+            }
         }
     }
-})
+});
 
 // bootstrap the demo
-var demo = new Vue({
-    el: '#demo',
-    data: {
-        searchQuery: '',
-        gridColumns: ['name', 'power'],
-        gridData: [
-            { name: 'Chuck Norris', power: Infinity },
-            { name: 'Bruce Lee', power: 9000 },
-            { name: 'Jackie Chan', power: 7000 },
-            { name: 'Jet Li', power: 8000 }
-        ]
-    }
-})
-
-function start_screen() {
-    //gamediv.html(startscreen_html);
-    let message_div = $("#message_div");
-    let teams_div = $("#teams");
-    let add_team_btn = $("#add_team");
-    let start_game_btn = $("#start_game");
-    let team_id_counter = 0;
-    let max_teams = 4;
-    //todo team colors
-
-    async function add_team(){
-        if(teams_div.children().length < max_teams){
-            teams_div.append(comps.get_add_team_row(team_id_counter));
-            team_id_counter++;
-        }else{
-            message_div.html(comps.get_alert_info("You can only have up to "+max_teams+" teams."))
-        }
-    }
-
-    add_team_btn.click((event) => {add_team()});
-    add_team();
-
-    teams_div.click((event) => {
-        let id = event.originalEvent.target.id;
-        let team_del = "team_del_";
-
-        if(id.indexOf(team_del) === 0) {
-            let id_num = id.replace(team_del, "");
-            $("#team_row_" + id_num).remove();
-        }
-    });
-
-
-    start_game_btn.click((event) => {
-
-
-        let teams = [];
-        let team_names_labels = $("label.team_name_label").toArray();
-
-        function Team(num, name){
-            this.num = num;
-            this.name = name
-        }
-
-        let _continue = true;
-        team_names_labels.forEach((label) => {
-            if (_continue){
-                let team_num = label.parentElement.parentElement.id.replace("team_row_", "");
-                let team_name = label.textContent;
-                if (team_name === startscreen_consts.default_teamname ){
-                    _continue = false;
-                }else{
-                    teams.push(new Team(team_num, team_name))
-                }
-            }
-        });
-        // right now 2 teams can have the same name since they're identified by their number
-        if (_continue){
-            game_screen(teams)
-        }else{
-            message_div.html(comps.get_alert_warning("All teams must set their name before starting the game."));
-        }
-    });
-
-}
+let demo = new Vue({
+    el: '#demo'
+});
 
 const gamescreen_consts = {
 
@@ -159,15 +127,17 @@ const gamescreen_consts = {
 
 function game_screen(teams){
     gamediv.html(gamescreen_html);
+    let global_comps
+    let comps = new Global_Comps();
     let message_div = $("#message_div");
     //let search_btn = $("#search");
     let search_term = $("#term");
     let search_output = $("#output");
 
-/*    search_btn.click(() => {
-        console.log("test");
-        query_trends();
-    });*/
+    /*    search_btn.click(() => {
+            console.log("test");
+            query_trends();
+        });*/
     $("#query_form_div").append(comps.game.query_form(teams.length));
 
 
@@ -195,7 +165,7 @@ function game_screen(teams){
             if (terms.length > 1){
                 for(let i in _.range(1, terms.length)){
                     console.log(+i+1);
-                   server_url += "&" + q_str + terms[+i+1]
+                    server_url += "&" + q_str + terms[+i+1]
                 }
             }
             console.log(server_url);
@@ -208,5 +178,3 @@ function game_screen(teams){
     }
 }
 
-
-start_screen();
