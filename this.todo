@@ -3,8 +3,10 @@ the google trends game app
 ☐ have a button at the top to go to the rules section.
 ☐ make a github pages page for my account so i can redirect to that in the footer
 ☐ It automatically queries Google trends via a browserfyied node api and puts the numbers on the the page.
+☐ minify bundle.js
 
 ui:
+  ☐ make it so that clicking on
   ☐ a checkbox to enable the google trends popup
   ☐ a button to edit the terms after they've been submitted
   ☐ the ablitity to have more than 2 teams
@@ -17,8 +19,14 @@ ui:
   ☐ zorg dat de content in het game ding in het midden van de pagina blijft als je niet in firefox zit
   ☐ make a message pop up when someone's on mobile telling them to use the app?
   ☐ save the gamestate with a cookie
+      just dump the content of the gametable to the disk.
+      ☐ a message that pops up that asks if you want to use a cookie to save your game.
+  table stuff:
+    ☐ points span font.
+    ☐ points span width.
 
-
+server:
+  ☐ set cors origin correctly before deploying the app
 notes:
   removed map url from vendor/bootstrap/css/bootstrap.min.css to supress warning.
 

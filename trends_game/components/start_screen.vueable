@@ -9,29 +9,27 @@
                 <button type="button" class="btn btn-info btn-lg"  style="height: 50px;margin-left: 30px;">Add team</button>
             </div>
             <div class="col-md-7" style="padding-right: 0;" >
-                % v-for="team_num in teams" v-bind:id="'team_row_' + team_num " =>
+                % v-for="team in teams" v-bind:id="'team_row_' + team.num " =>
                 <div class="row"  style="height: 25px;margin-bottom: 6px;">
                     <div class="col-10" style="padding-right: 0;">
-                        % contenteditable="true" @input="update_teamname" v-bind:id="t_input_id + team_num"=>
+                        % contenteditable="true" @input="update_teamname" v-bind:id="t_input_id + team.num"=>
                         <div style="
                            background-color: slateblue;
                            border-radius:5px;padding-left: 5px;
                            padding-right: 5px;
                            width: 100%;
-                           text-align: center;" >{{default_teamname}}</div>
+                           text-align: center;" >{{team.name}}</div>
 
                     </div>
                     <div class="col-2" style="padding-right: 30px; padding-left: 0px;">
-                        % @click="delete_team(team_num)" =>
+                        % @click="delete_team(team.num)" =>
                         <button type="button" class="btn btn-danger btn-block"
                         style="
                         text-align: center;
                         padding: 0rem  12px;"
                         >X</button>
                     </div>
-
                 </div>
-
             </div>
             <div class="col-md-2" >
                 % @click="start_game()" =>

@@ -1,6 +1,52 @@
-label:hover {
-    background: #f2f5ff;
-    border-radius:8px;
-    padding:2px 4px;
-    transform: translate(0px, -2px);
+table {
+    border: 2px solid #42b983;
+    border-radius: 3px;
+    background-color: #fff;
+}
+
+th {
+    background-color: #42b983;
+    color: rgba(255,255,255,0.66);
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+th, td {
+    padding: 10px 10px;
+}
+
+
+table {
+    border-collapse: collapse;
+}
+table td{
+    border: 1px solid black;
+}
+table tr:first-child {
+    border-top: 0;
+}
+table tr:last-child td {
+    border-bottom: 0;
+}
+table tr td:first-child {
+    border-left: 0;
+}
+
+table tr:first-child td{
+    border-top: 0;
+}
+
+table tr td:last-child {
+    border-right: 0;
+}
+
+td span {
+    float: left;
 }
