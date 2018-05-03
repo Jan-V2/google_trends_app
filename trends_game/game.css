@@ -44,9 +44,16 @@ table tr:first-child td{
 }
 
 table tr td:last-child {
-    border-right: 0;
+    /*for the button*/
+    border: 0;
+    padding: 4px;
 }
 
 td span {
     float: left;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
 }

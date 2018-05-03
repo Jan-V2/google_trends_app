@@ -9,7 +9,7 @@ r_async.parallel([
 let parser = new Vueable();
 let startscreen_active = false;
 
-/*Vue.component('start_screen', {
+Vue.component('start_screen', {
     template:  parser.parse(startscreen_templ),
     data: function () {
         return {
@@ -100,7 +100,12 @@ let startscreen_active = false;
             }
         }
     }
-});*/
+});
+
+let start_screen = new Vue({
+    el: '#startscreen'
+});
+
 
 const canvas_cntx = document.createElement("canvas").getContext("2d");
 function get_max_text_width (strings, font) {
@@ -148,7 +153,9 @@ Vue.component("game",{
                 query_text_font: query_text_font,
                 points_span_width: points_span_width,
                 queries: [],
-                min_col_width: min_col_width
+                min_col_width: min_col_width,
+                query_form: {},
+                alert_templ: new Global_Comps()
                 /* create a 2d array for the query results,
                  * which the x which matches a team array index,
                  * and the y matches a round (aka a rou)*/
@@ -161,6 +168,19 @@ Vue.component("game",{
 
         },
         computed:{
+            points_total: function() {
+                let totals = Array(this.teams.length).fill(0);
+                this.queries.forEach((query) => {
+                    for (let i in _.range(query.length)){
+                        totals[i] += query[i].points;
+                    }
+                });
+                return totals;
+            },
+            input_field_row_class(){
+                let base_str = "col-";
+                return base_str + 12 / this.teams.length;
+            }
         },
         methods:{
             add_query_row: function(row) {
@@ -179,9 +199,65 @@ Vue.component("game",{
                 let width = this.points_span_width + get_max_text_width([_term], this.query_text_font);
                 return{
                     points_txt : points+" points:  ",
+                    points: points,
                     term: _term,
                     width: width
                 }
+            },
+            submit_query: function(){
+                let terms = [];
+                this.teams.forEach((e) => {
+                    let str = this.query_form[e.num];
+                    if (str === undefined){
+                        terms.push("")
+                    }else{
+                        terms.push(str.replace(/,/g, "").trim());
+                    }
+                });
+                console.log(terms);
+                if (terms.indexOf("") !== -1){
+                    this.show_msg(this.alert_templ.get_alert_info("All terms need to be filled in to submit."));
+                    return;
+                }
+
+                function query_server() {
+                    let server_url = "http://18.197.12.243:5000/";
+                    server_url += "?";
+                    let q_str = "q=";
+                    server_url += q_str + terms[0];
+                    if (terms.length > 1){
+                        for(let i in _.range(1, terms.length)){
+                            server_url += "&" + q_str + terms[+i+1]
+                        }
+                    }
+                    return JSON.parse(httpGet(server_url));// see jquery cors bug in notes
+                }
+                let table_row = [];
+                let result = query_server();
+                for (let i in _.range(terms.length)){
+                    table_row.push(this.get_new_query_item(result[i], terms[i]))
+                }
+                this.add_query_row(table_row);
+
+            },
+            get_url: function(row){
+                console.log("updated url");
+                let url = "https://trends.google.com/trends/explore?q=";
+                let get = (obj) => {return obj.term};
+                url += get(row[0]);
+                if (row.length > 1){
+                    for (let i = 1; i < row.length; i++) {
+                        url += ",";
+                        url += get(row[i]);
+                    }
+                }
+                return url;
+            },
+            open_link_in_tab: function(event){
+                window.open(event.target.getAttribute("href"))
+            },
+            show_msg: function(msg_html) {
+                $("#message_div").html(msg_html)
             },
             test: function() {
                 this.min_col_width += 10;
@@ -191,68 +267,10 @@ Vue.component("game",{
 );
 
 
-// bootstrap the demo
-let demo = new Vue({
-    el: '#demo'
+let game_screen = new Vue({
+    el: '#game_screen'
 });
 
-const gamediv = $("#game");
 
 
-const gamescreen_consts = {
-
-};
-
-function game_screen(teams){
-    gamediv.html(gamescreen_html);
-    let global_comps
-    let comps = new Global_Comps();
-    let message_div = $("#message_div");
-    //let search_btn = $("#search");
-    let search_term = $("#term");
-    let search_output = $("#output");
-
-    /*    search_btn.click(() => {
-            console.log("test");
-            query_trends();
-        });*/
-    $("#query_form_div").append(comps.game.query_form(teams.length));
-
-
-    teams.forEach((team) => {
-        gamediv.append(`<span>${team.num} ${team.name}</span>`);
-        gamediv.append(comps.get_clearfix());
-    });
-
-    $("#queries_form").submit(function( event ) {
-        console.log("query form");
-        event.preventDefault();
-    });
-
-
-    async function query_trends() {
-        let terms = [$("#term1").val(), $("#term2").val()];
-        console.log(terms.toString());
-        if (terms.indexOf("") !== -1){
-            message_div.html(comps.get_alert_warning("The search term can't be blank"))
-        }else{
-            let server_url = "http://18.197.12.243:5000/";
-            server_url += "?";
-            let q_str = "q=";
-            server_url += q_str + terms[0];
-            if (terms.length > 1){
-                for(let i in _.range(1, terms.length)){
-                    console.log(+i+1);
-                    server_url += "&" + q_str + terms[+i+1]
-                }
-            }
-            console.log(server_url);
-            let result = JSON.parse(httpGet(server_url));// see jquery cors bug in notes
-            result.forEach((e) => {
-                gamediv.append(`<span>${e.toString()}</span>`);
-                gamediv.append(comps.get_clearfix());
-            })
-        }
-    }
-}
 

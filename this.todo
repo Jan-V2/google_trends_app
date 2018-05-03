@@ -16,7 +16,7 @@ ui:
   ☐ Next to each result there should be a goto URL.
   ☐ The scores should be auto added and appear at the bottom of the page.
   ☐ You should be able to add extra score before final add
-  ☐ zorg dat de content in het game ding in het midden van de pagina blijft als je niet in firefox zit
+  ✔ zorg dat de content in het game ding in het midden van de pagina blijft als je niet in firefox zit @done(2018-05-02 01:33) @project(ui)
   ☐ make a message pop up when someone's on mobile telling them to use the app?
   ☐ save the gamestate with a cookie
       just dump the content of the gametable to the disk.
@@ -24,6 +24,17 @@ ui:
   table stuff:
     ☐ points span font.
     ☐ points span width.
+    ☐ total at the bottom
+    ☐ extra points field before total
+  ☐ some sort of thatng that shows who's winning
+  config options:
+    ☐ use teamnames as searchterm
+    ☐ team colors
+    ☐ set max rounds
+  ☐ some sort of endscreen.
+
+explaination of the game:
+  ☐ don in markdown at the bottom of the page.
 
 server:
   ☐ set cors origin correctly before deploying the app
