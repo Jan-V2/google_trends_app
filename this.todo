@@ -1,49 +1,45 @@
 the google trends game app
 
-☐ have a button at the top to go to the rules section.
-☐ make a github pages page for my account so i can redirect to that in the footer
-☐ It automatically queries Google trends via a browserfyied node api and puts the numbers on the the page.
-☐ minify bundle.js
-
 ui:
-  ☐ make it so that clicking on
-  ☐ a checkbox to enable the google trends popup
-  ☐ a button to edit the terms after they've been submitted
-  ☐ the ablitity to have more than 2 teams
-  ☐ a points multiplier field
-  ☐ make the top thing smaller when you scroll down
-  ☐ Those numbers should copy to clipboard when you click them.
-  ☐ Next to each result there should be a goto URL.
-  ☐ The scores should be auto added and appear at the bottom of the page.
-  ☐ You should be able to add extra score before final add
-  ✔ zorg dat de content in het game ding in het midden van de pagina blijft als je niet in firefox zit @done(2018-05-02 01:33) @project(ui)
-  ☐ make a message pop up when someone's on mobile telling them to use the app?
+  ☐ have a button at the top to go to the rules section.
+  ☐ minify bundle.js
   ☐ save the gamestate with a cookie
-      just dump the content of the gametable to the disk.
-      ☐ a message that pops up that asks if you want to use a cookie to save your game.
+      just dump the content of the model to disk as json
+        it should have a settings section,
+        a teams section,
+        and a table section.
+          you should be able to just load the json from disk and dump it into the model.
+  ☐ make guide with markdown
+  ☐ some sort of elagant way of having house rules.
+      maybe with some sort of house rules menu
+  ☐ make it so that clicking on
+  ☐ have a whole bunch of rules you can set
+    ☐ number of rounds
+    ☐ final round multiplier
+    ☐ theme term
+      ☐ you should be able to set themeterm before/after user therm
+  ☐ some sort of thatng that shows who's winning
+  ☐ some sort of endscreen.
   table stuff:
     ☐ points span font.
     ☐ points span width.
     ☐ total at the bottom
     ☐ extra points field before total
-  ☐ some sort of thatng that shows who's winning
   config options:
+    ☐ allow saveing
     ☐ use teamnames as searchterm
-    ☐ team colors
     ☐ set max rounds
-  ☐ some sort of endscreen.
 
-explaination of the game:
-  ☐ don in markdown at the bottom of the page.
+  ✘ a checkbox to enable the google trends popup @cancelled(2018-05-04 00:12) @project(ui)
+  ✘ a button to edit the terms after they've been submitted @cancelled(2018-05-04 00:12) @project(ui)
+  ✔ the ablitity to have more than 2 teams @done(2018-05-04 00:11) @project(ui)
+      up to 4
+  ✘ a points multiplier field @cancelled(2018-05-04 00:02) @project(ui)
+  ✔ make the top thing smaller when you scroll down @done(2018-05-04 00:01) @project(ui)
+  ✘ Those numbers should copy to clipboard when you click them. @cancelled(2018-05-04 00:01) @project(ui)
+  ✔ Next to each result there should be a goto URL. @done(2018-05-04 00:01) @project(ui)
+  ✔ The scores should be auto added and appear at the bottom of the page. @done(2018-05-04 00:01) @project(ui)
+  ✔ zorg dat de content in het game ding in het midden van de pagina blijft als je niet in firefox zit @done(2018-05-02 01:33) @project(ui)
 
 server:
   ☐ set cors origin correctly before deploying the app
-notes:
-  removed map url from vendor/bootstrap/css/bootstrap.min.css to supress warning.
-
-startscreen:
-  ☐ zorg ervoor dat elk team een eigen kleur heeft
-
-gamescreen:
-  ☐ add the api lib with webpack
-  ☐ figure out de layout. zorg ervoor dat je 1 layout hebt voor 1 tot 4 teams.S

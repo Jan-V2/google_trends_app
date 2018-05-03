@@ -2,12 +2,14 @@
 let startscreen_templ;
 let game_templ;
 r_async.parallel([
-    () => {startscreen_templ = httpGet("/trends_game/components/start_screen.vueable")},
-    () => {game_templ = httpGet("/trends_game/components/game_screen.vueable")}
+    () => {startscreen_templ = httpGet("/trends_game/components/start_screen.vueable.html")},
+    () => {game_templ = httpGet("/trends_game/components/game_screen.vueable.html")}
 
 ]);
 let parser = new Vueable();
-let startscreen_active = false;
+let startscreen_active = true;
+
+let outer_teams;
 
 Vue.component('start_screen', {
     template:  parser.parse(startscreen_templ),
@@ -68,11 +70,10 @@ Vue.component('start_screen', {
             $("#message_div").html(msg_html)
         },
         get_new_team: function(team_num) {
-            let ret = {
+            return {
                 num: team_num,
                 name: this.default_teamname
             };
-            return ret;
         },
         start_game: function() {
             let found = [];
@@ -93,9 +94,8 @@ Vue.component('start_screen', {
             });
             if (game_is_ready){
                 console.log("starting game");
-                this.teams.forEach((e) => {
-                    console.log(e.name + e.num);
-                });
+                outer_teams = this.teams;
+                open_gamescreen();
                 this.active = false;
             }
         }
@@ -120,30 +120,23 @@ function get_max_text_width (strings, font) {
     return max_width;
 }
 
+
+
 Vue.component("game",{
         //putting this in a table
         template: parser.parse(game_templ),
         data: function () {
-            let teams = [{
-                name: "t name 1 blaaaah",
-                num: 3
-            },{
-                name: "t name 2",
-                num: 5
-            },{
-                name: "test",
-                num: 6
-            }];
-            const table_header_font = "bold 12pt Montserrat";
+            let teams = outer_teams;
+            const table_header_font = "bold 12pt Montserrat";//todo change these fonts to lato
             const points_span_font = "italic 12pt Montserrat";
             const query_text_font = "12pt Montserrat";
+            let table_cell_padding = 2*10;
 
-            let min_col_width = get_max_text_width(teams.map((t) => {return t.name}) , table_header_font) + 20;
-            let fnt = table_header_font;
+            let min_col_width = get_max_text_width(teams.map((t) => {return t.name}) , table_header_font) + table_cell_padding;
+            //let fnt = table_header_font;
             //let test_elem = $(`<div style="display: inline-block"><span style="font:${fnt};width:${get_max_text_width([txt], fnt)}px;float: left;padding-top: 3px;">${txt}</span><span style="font: ${query_text_font}">query_text</span></div>`);
 
-            let points_span_width = get_max_text_width(["100 points: "], fnt);
-
+            let points_span_width = get_max_text_width(["100 points: "], table_header_font);
 
             return {
                 active: true,
@@ -155,16 +148,26 @@ Vue.component("game",{
                 queries: [],
                 min_col_width: min_col_width,
                 query_form: {},
-                alert_templ: new Global_Comps()
+                alert_templ: new Global_Comps(),
+                table_cell_padding: table_cell_padding
                 /* create a 2d array for the query results,
                  * which the x which matches a team array index,
                  * and the y matches a round (aka a rou)*/
             }
         },
         mounted: function(){
-            this.add_query_row([ this.get_new_query_item(100, "test"), this.get_new_query_item(43, "testing"), this.get_new_query_item(43, "testing")]);
+            let total_width = get_max_text_width(["Total: 0"], this.table_header_font) + this.table_cell_padding;
+            console.log(this.min_col_width);
+            console.log(total_width);
+            if (total_width > this.min_col_width){
+                this.min_col_width = total_width;
+            }
+            console.log(this.min_col_width);
+
+/*            this.add_query_row([ this.get_new_query_item(100, "test"), this.get_new_query_item(43, "testing"), this.get_new_query_item(43, "testing")]);
             this.add_query_row([ this.get_new_query_item(52, "boooooooh"), this.get_new_query_item(61, "bleh"), this.get_new_query_item(43, "testing")]);
-            this.add_query_row([ this.get_new_query_item(52, "boooooooh"), this.get_new_query_item(61, "bleh"), this.get_new_query_item(43, "testing")]);
+            this.add_query_row([ this.get_new_query_item(52, "boooooooh"), this.get_new_query_item(61, "bleh"), this.get_new_query_item(43, "testing")]);*/
+
 
         },
         computed:{
@@ -188,7 +191,6 @@ Vue.component("game",{
                 row.forEach((e) => {
                     if (e.width > w){
                         w = e.width;
-                        console.log("updated width");
                     }
                 });
                 this.min_col_width = w;
@@ -196,7 +198,7 @@ Vue.component("game",{
             },
 
             get_new_query_item: function (points, _term) {
-                let width = this.points_span_width + get_max_text_width([_term], this.query_text_font);
+                let width = this.points_span_width + get_max_text_width([_term], this.query_text_font) + this.table_cell_padding;
                 return{
                     points_txt : points+" points:  ",
                     points: points,
@@ -212,9 +214,9 @@ Vue.component("game",{
                         terms.push("")
                     }else{
                         terms.push(str.replace(/,/g, "").trim());
+                        this.query_form[e.num] = "";
                     }
                 });
-                console.log(terms);
                 if (terms.indexOf("") !== -1){
                     this.show_msg(this.alert_templ.get_alert_info("All terms need to be filled in to submit."));
                     return;
@@ -258,18 +260,17 @@ Vue.component("game",{
             },
             show_msg: function(msg_html) {
                 $("#message_div").html(msg_html)
-            },
-            test: function() {
-                this.min_col_width += 10;
             }
         }
     }
 );
 
 
-let game_screen = new Vue({
-    el: '#game_screen'
-});
+function open_gamescreen(){
+    let game_screen = new Vue({
+        el: '#game_screen'
+    });
+};
 
 
 
