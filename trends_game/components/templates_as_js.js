@@ -40,7 +40,6 @@ vue_templates = {
         </div>
     </div>
 </div>
-
     `,
     game_screen:`
     <div>

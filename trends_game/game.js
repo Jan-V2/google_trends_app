@@ -1,7 +1,7 @@
 
 let startscreen_templ;
 let game_templ;
-let use_templates_from_js = false;
+let use_templates_from_js = true;
 if (use_templates_from_js){
     startscreen_templ = vue_templates.start_screen;
     game_templ = vue_templates.game_screen;
