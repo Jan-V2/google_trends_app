@@ -1,11 +1,17 @@
 
 let startscreen_templ;
 let game_templ;
-r_async.parallel([
-    () => {startscreen_templ = httpGet("/trends_game/components/start_screen.vueable.html")},
-    () => {game_templ = httpGet("/trends_game/components/game_screen.vueable.html")}
+let use_templates_from_js = false;
+if (use_templates_from_js){
+    startscreen_templ = vue_templates.start_screen;
+    game_templ = vue_templates.game_screen;
+}else{
+    r_async.parallel([
+        () => {startscreen_templ = httpGet("/trends_game/components/start_screen.vueable.html")},
+        () => {game_templ = httpGet("/trends_game/components/game_screen.vueable.html")}
 
-]);
+    ]);
+}
 let parser = new Vueable();
 let startscreen_active = true;
 
@@ -119,8 +125,6 @@ function get_max_text_width (strings, font) {
     });
     return max_width;
 }
-
-
 
 Vue.component("game",{
         //putting this in a table
