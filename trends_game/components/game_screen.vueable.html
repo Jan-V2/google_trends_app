@@ -6,7 +6,7 @@
         <div class="row no-gutters" style="max-width: 700px; margin: auto">
             <table  style="margin: auto;">
                 <thead>
-                % v-for="team in teams" v-bind:width="min_col_width" =>
+                % v-for="team in teams" v-bind:width="min_col_width" :style="{ backgroundColor: team.color  }"=>
                 <th style="text-align: center" >{{team.name}}</th>
                 <th>links</th>
                 </thead>

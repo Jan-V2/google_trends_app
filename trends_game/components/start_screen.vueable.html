@@ -12,9 +12,8 @@
                 % v-for="team in teams" v-bind:id="'team_row_' + team.num " =>
                 <div class="row"  style="height: 25px;margin-bottom: 6px;">
                     <div class="col-10" style="padding-right: 0;">
-                        % contenteditable="true" @input="update_teamname" v-bind:id="t_input_id + team.num"=>
+                        % contenteditable="true" @input="update_teamname" v-bind:id="t_input_id + team.num" :style="{ backgroundColor: team.color  }" =>
                         <div style="
-                           background-color: slateblue;
                            border-radius:5px;padding-left: 5px;
                            padding-right: 5px;
                            width: 100%;

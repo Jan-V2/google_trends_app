@@ -1,7 +1,7 @@
 
 let startscreen_templ;
 let game_templ;
-let use_templates_from_js = true;
+let use_templates_from_js = false;
 if (use_templates_from_js){
     startscreen_templ = vue_templates.start_screen;
     game_templ = vue_templates.game_screen;
@@ -20,6 +20,16 @@ let outer_teams;
 Vue.component('start_screen', {
     template:  parser.parse(startscreen_templ),
     data: function () {
+        let possible_team_colors = [ // html color names
+            "CornflowerBlue",
+            "DarkGreen",
+            "DarkOrange",
+            "DodgerBlue",
+            "ForestGreen",
+            "BlueViolet",
+            "Maroon",
+        ];
+
         return {
             teams: [],
             default_teamname: "Click to edit teamname",
@@ -27,11 +37,18 @@ Vue.component('start_screen', {
             max_teams: 4,
             team_id_counter: 0,
             active: startscreen_active,
+            team_color_list: possible_team_colors,
             alert_templ: new Global_Comps()
         }
     },
     mounted: function(){
         this.add_team();
+    },
+    computed:{
+        unused_team_colors: function() {
+            let in_use_colors = this.teams.map((team) => {return team.color});
+            return this.team_color_list.filter((color) => {return in_use_colors.indexOf(color) === -1});
+        }
     },
     methods: {
         add_team: function (){
@@ -76,9 +93,12 @@ Vue.component('start_screen', {
             $("#message_div").html(msg_html)
         },
         get_new_team: function(team_num) {
+            let unused_colors = this.unused_team_colors;
+            let random_color = unused_colors[Math.floor(Math.random()*unused_colors.length)];
             return {
                 num: team_num,
-                name: this.default_teamname
+                name: this.default_teamname,
+                color: random_color
             };
         },
         start_game: function() {

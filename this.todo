@@ -1,7 +1,7 @@
 the google trends game app
 
 ui:
-  ☐ have a button at the top to go to the rules section.
+  ✔ use teamcolors @done(2018-05-09 02:30) @project(ui)
   ☐ minify bundle.js
   ☐ save the gamestate with a cookie
       just dump the content of the model to disk as json
@@ -12,7 +12,7 @@ ui:
   ☐ make guide with markdown
   ☐ some sort of elagant way of having house rules.
       maybe with some sort of house rules menu
-  ☐ make it so that clicking on
+  ☐ make it so that clicking on???
   ☐ have a whole bunch of rules you can set
     ☐ number of rounds
     ☐ final round multiplier
@@ -23,7 +23,7 @@ ui:
   table stuff:
     ☐ points span font.
     ☐ points span width.
-    ☐ total at the bottom
+    ✔ total at the bottom @done(2018-05-09 02:29) @project(ui / table stuff)
     ☐ extra points field before total
   config options:
     ☐ allow saveing
