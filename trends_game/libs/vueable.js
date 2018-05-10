@@ -55,3 +55,9 @@ function Vueable() {
 
     }
 }
+
+if (typeof module !== "undefined"){
+    module.exports = {
+        Vueable: Vueable
+    }
+}

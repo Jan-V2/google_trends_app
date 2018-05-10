@@ -2,8 +2,8 @@ the google trends game app
 
 ui:
   ✔ use teamcolors @done(2018-05-09 02:30) @project(ui)
-  ☐ minify bundle.js
-  ☐ save the gamestate with a cookie
+  ✘ minify bundle.js @cancelled(2018-05-10 12:36) @project(ui)
+  ✔ save the gamestate with a cookie @done(2018-05-10 15:16) @project(ui)
       just dump the content of the model to disk as json
         it should have a settings section,
         a teams section,
@@ -12,23 +12,22 @@ ui:
   ☐ make guide with markdown
   ☐ some sort of elagant way of having house rules.
       maybe with some sort of house rules menu
-  ☐ make it so that clicking on???
   ☐ have a whole bunch of rules you can set
-    ☐ number of rounds
-    ☐ final round multiplier
+    ✔ number of rounds @done(2018-05-11 00:39) @project(ui)
+    ✘ final round multiplier @cancelled(2018-05-11 00:39) @project(ui)
     ☐ theme term
       ☐ you should be able to set themeterm before/after user therm
-  ☐ some sort of thatng that shows who's winning
-  ☐ some sort of endscreen.
+  ✘ some sort of thatng that shows who's winning @cancelled(2018-05-10 15:16) @project(ui)
+  ✔ some sort of endscreen. @done(2018-05-11 00:39) @project(ui)
   table stuff:
     ☐ points span font.
     ☐ points span width.
     ✔ total at the bottom @done(2018-05-09 02:29) @project(ui / table stuff)
-    ☐ extra points field before total
+    ✘ extra points field before total @cancelled(2018-05-11 00:39) @project(ui / table stuff)
   config options:
-    ☐ allow saveing
+    ✔ allow saveing @done(2018-05-10 15:17) @project(ui / config options)
     ☐ use teamnames as searchterm
-    ☐ set max rounds
+    ✔ set max rounds @done(2018-05-11 00:39) @project(ui / config options)
 
   ✘ a checkbox to enable the google trends popup @cancelled(2018-05-04 00:12) @project(ui)
   ✘ a button to edit the terms after they've been submitted @cancelled(2018-05-04 00:12) @project(ui)

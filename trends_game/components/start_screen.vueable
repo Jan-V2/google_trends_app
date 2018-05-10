@@ -1,0 +1,53 @@
+<div>
+  % v-if="active" =>
+  <div style="width: 700px; margin: auto; padding-top: 32px;">
+    <!--this minwidth means this won't work on mobile phones-->
+    <div id="message_div"  style="width: 100%;" ></div>
+    <div class="row">
+      <div class="col-md-3" >
+        <div :style="{ marginLeft: '30px' }">
+        % @click="add_team()" =>
+        <button type="button" class="btn btn-info btn-lg"  style="height: 50px;">Add team</button>
+        <div class="dropdown">
+          % v-text="rounds  + ' rounds'" :style="{ width: '99%' }"=>
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          </button>
+
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+            % v-for="i in _.range(max_rounds)" v-if="i > 0" v-text="i + ' rounds'" @click="set_rounds(i)"  =>
+            <a class="dropdown-item" href="#" >Action</a>
+
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="col-md-7" style="padding-right: 0;" >
+        % v-for="team in teams" v-bind:id="'team_row_' + team.num " =>
+        <div class="row"  style="height: 25px;margin-bottom: 6px;">
+          <div class="col-10" style="padding-right: 0;">
+            % contenteditable="true" @input="update_teamname" v-bind:id="t_input_id + team.num" :style="{ backgroundColor: team.color  }" =>
+            <div style="
+                           border-radius:5px;padding-left: 5px;
+                           padding-right: 5px;
+                           width: 100%;
+                           text-align: center;" >{{team.name}}</div>
+          </div>
+          <div class="col-2" style="padding-right: 30px; padding-left: 0px;">
+            % @click="delete_team(team.num)" =>
+            <button type="button" class="btn btn-danger btn-block"
+                    style="
+                        text-align: center;
+                        padding: 0rem  12px;"
+            >X</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2" >
+        % @click="start_game()" :style="{ backgroundColor: ' #28b463', borderColor: ' #28b463' }" =>
+        <button type="button" class="btn " style="height: 50px;">Start game</button>
+        % @click="load_old_game()" =>
+        <button type="button" class="btn btn-warning" style="height: 50px;">Load game</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<div>
+  <div style="width: 700px;text-align: center;margin: auto" >
+    <h1>Congratulations to team {{teams[winner_idx].name}}.</h1>
+    <div class="clearfix"></div>
+    % :style="{marginBottom: '30px'}" =>
+    <h2>They won with a score of {{winning_score}} points!</h2>
+    % v-for="i in _.range(links.length)" @click="open_link(links[i])" =>
+    <button class="btn btn-primary">Link round {{i + 1}}</button>
+  </div>
+</div>

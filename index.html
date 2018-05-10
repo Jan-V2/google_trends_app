@@ -5,11 +5,6 @@
   <!--libs used by all.-->
   <script src="trends_game/libs/jquery-3.3.1.min.js"></script>
 
-  <!--file includes-->
-  <a href="trends_game/components/game_screen.vueable.html" style="visibility: hidden"></a>
-  <a href="trends_game/components/start_screen.vueable.html" style="visibility: hidden"></a>
-
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
@@ -29,7 +24,13 @@
   <link href="css/freelancer.min.css" rel="stylesheet">
 </head>
 
+
 <body id="page-top">
+
+<link href="trends_game/components/confetti/confetti.css" rel="stylesheet">
+<canvas height="1" id="confetti" style="background:transparent;"  width="1"></canvas>
+<script src="trends_game/components/confetti/confetti.js"></script>
+
 
 <!-- Navigation -->
 <nav class="navbar  bg-secondary fixed-top text-uppercase" id="mainNav">
@@ -67,6 +68,13 @@
   <game>
   </game>
 </div>
+
+
+<div id="end_screen" >
+  <end_screen>
+  </end_screen>
+</div>
+
 
 
 <script src="trends_game/game.js"></script>
