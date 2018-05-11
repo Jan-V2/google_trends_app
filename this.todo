@@ -41,4 +41,5 @@ ui:
   ✔ zorg dat de content in het game ding in het midden van de pagina blijft als je niet in firefox zit @done(2018-05-02 01:33) @project(ui)
 
 server:
+  ☐ fix https issue
   ☐ set cors origin correctly before deploying the app
