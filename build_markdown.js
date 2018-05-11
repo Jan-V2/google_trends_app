@@ -1,3 +1,4 @@
+console.log("building markdown to js");
 
 let fs = require("fs"),
     showdown  = require('showdown'),
@@ -5,3 +6,5 @@ let fs = require("fs"),
     text      = fs.readFileSync("guide.md", "utf8"),
     html      = converter.makeHtml(text);
 fs.writeFileSync("./guide.html", html);
+
+console.log("done");

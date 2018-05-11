@@ -1,9 +1,14 @@
 <div>
   % v-if="active" =>
-  <div style="width: 700px; margin: auto; padding-top: 32px;">
-    <!--this minwidth means this won't work on mobile phones-->
+  <div style="width: 720px; margin: auto; padding-top: 32px;">
     <div id="message_div"  style="width: 100%;" ></div>
-    <div class="row">
+    <div class="form-group" :style="{width: '200px', margin: 'auto', paddingBottom: '20px', textAlign: 'center'}">
+      <label for="usr" :style="{fontSize: 'large'}" ><b>Theme term: </b></label>
+      % v-model="theme" =>
+      <input type="text" class="form-control" id="usr">
+    </div>
+    <div class="row" :style="{marginRight: '30px' }">
+      <!--left collum-->
       <div class="col-md-3" >
         <div :style="{ marginLeft: '30px' }">
         % @click="add_team()" =>
@@ -12,15 +17,14 @@
           % v-text="rounds  + ' rounds'" :style="{ width: '99%' }"=>
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           </button>
-
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
             % v-for="i in _.range(max_rounds)" v-if="i > 0" v-text="i + ' rounds'" @click="set_rounds(i)"  =>
             <a class="dropdown-item" href="#" >Action</a>
-
           </div>
         </div>
         </div>
       </div>
+      <!--middle-->
       <div class="col-md-7" style="padding-right: 0;" >
         % v-for="team in teams" v-bind:id="'team_row_' + team.num " =>
         <div class="row"  style="height: 25px;margin-bottom: 6px;">
@@ -42,6 +46,7 @@
           </div>
         </div>
       </div>
+      <!--right collum-->
       <div class="col-md-2" >
         % @click="start_game()" :style="{ backgroundColor: ' #28b463', borderColor: ' #28b463' }" =>
         <button type="button" class="btn " style="height: 50px;">Start game</button>

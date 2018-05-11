@@ -10,12 +10,12 @@ ui:
         and a table section.
           you should be able to just load the json from disk and dump it into the model.
   ☐ make guide with markdown
-  ☐ some sort of elagant way of having house rules.
+  ✘ some sort of elagant way of having house rules. @cancelled(2018-05-12 01:52) @project(ui)
       maybe with some sort of house rules menu
   ☐ have a whole bunch of rules you can set
     ✔ number of rounds @done(2018-05-11 00:39) @project(ui)
     ✘ final round multiplier @cancelled(2018-05-11 00:39) @project(ui)
-    ☐ theme term
+    ✔ theme term @done(2018-05-12 01:52) @project(ui)
       ☐ you should be able to set themeterm before/after user therm
   ✘ some sort of thatng that shows who's winning @cancelled(2018-05-10 15:16) @project(ui)
   ✔ some sort of endscreen. @done(2018-05-11 00:39) @project(ui)
@@ -41,5 +41,6 @@ ui:
   ✔ zorg dat de content in het game ding in het midden van de pagina blijft als je niet in firefox zit @done(2018-05-02 01:33) @project(ui)
 
 server:
-  ☐ fix https issue
+  ✘ fix https issue @cancelled(2018-05-12 01:52) @project(server)
+  ☐ fix www. domain issue in firefox.
   ☐ set cors origin correctly before deploying the app

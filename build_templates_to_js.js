@@ -1,3 +1,4 @@
+console.log("building templates to js");
 let fs = require("fs");
 let vueable = require("./trends_game/libs/vueable.js");
 let parser = new vueable.Vueable();
@@ -10,3 +11,5 @@ let templates = {
 let text = "vue_templates = " + JSON.stringify(templates);
 
 fs.writeFileSync("./trends_game/components/templates_as_js.js", text);
+
+console.log("done");

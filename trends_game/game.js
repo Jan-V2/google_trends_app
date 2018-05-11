@@ -3,7 +3,7 @@ let startscreen_templ;
 let game_templ;
 let end_screen;
 
-let use_templates_from_js = true;
+let use_templates_from_js = false;
 
 if (use_templates_from_js){
     startscreen_templ = vue_templates.start_screen;
@@ -21,6 +21,12 @@ if (use_templates_from_js){
 let startscreen_active = true;
 let load_old_game = false;
 let gamescreen_data = {};
+
+function clean_str(str) {return str.trim().replace(",", "").replace("?", "")}
+
+function contains_spaces(string) {
+    return /\s/.test(string);
+}
 
 Vue.component('start_screen', {
     template:  startscreen_templ,
@@ -44,6 +50,7 @@ Vue.component('start_screen', {
             team_id_counter: 0,
             active: startscreen_active,
             team_color_list: possible_team_colors,
+            theme: "",
             alert_templ: new Global_Comps(),
             rounds : 3
         }
@@ -114,32 +121,60 @@ Vue.component('start_screen', {
             };
         },
         start_game: function() {
+            let _this = this;
             let found = [];
-            let game_is_ready = true;
 
-            this.teams.map((e) => {return e.name}).forEach((name) => {
-                if (game_is_ready){
-                    if (name === this.default_teamname ){
-                        game_is_ready = false;
-                        this.show_msg(this.alert_templ.get_alert_info("All teams need have changed their name before starting."));
-                    }else if(found.indexOf(name) !== -1){
-                        game_is_ready = false;
-                        this.show_msg(this.alert_templ.get_alert_info("All teamnames need to be unique."));
-                    }else{
-                        found.push(name);
-                    }
-                }
-            });
-            if (game_is_ready){
-                gamescreen_data.teams = this.teams;
-                gamescreen_data.rounds = this.rounds;
-                open_gamescreen();
-                this.active = false;
+            let theme = clean_str(this.theme);
+            if(contains_spaces(theme)){
+                _this.show_msg(_this.alert_templ.get_alert_info("Theme term can't contain spaces"));
+                return;
+            }else if(theme === ""){
+                _this.show_msg(_this.alert_templ.get_alert_info("Theme term can't be empty."));
+                return;
             }
+
+            function is_teamname_valid(str) {
+                if (str === _this.default_teamname ){
+                    _this.show_msg(_this.alert_templ.get_alert_info("All teams need have changed their from the default, before starting."));
+                    return false;
+                }else if(found.indexOf(str) !== -1) {
+                    _this.show_msg(_this.alert_templ.get_alert_info("All team names need to be unique."));
+                    return false;
+                }else if(contains_spaces(str)){
+                    _this.show_msg(_this.alert_templ.get_alert_info("Team names can't contain spaces."));
+                    return false;
+                }else if(str === ""){
+                    _this.show_msg(_this.alert_templ.get_alert_info("Team names can't be empty."));
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+
+            let team_names = this.teams.map((team) => {return clean_str(team.name)});
+            for (let i in _.range(team_names.length)) {
+                let name = team_names[i];
+                if (is_teamname_valid(name)){
+                    found.push(name);
+                }else{
+                    return;
+                }
+            }
+
+            gamescreen_data.theme = theme;
+            gamescreen_data.teams = this.teams.map((team) => {
+                team.name = clean_str(team.name);
+                return team;
+            });
+            gamescreen_data.rounds = this.rounds;
+            open_gamescreen();
+            this.active = false;
+
         },
         load_old_game: function(){
             if (document.cookie !== ""){
                 load_old_game = true;
+                gamescreen_data.them = "";
                 gamescreen_data.rounds = 0;
                 gamescreen_data.teams = [];
                 open_gamescreen();
@@ -150,7 +185,7 @@ Vue.component('start_screen', {
         },
         set_rounds(num){
             this.rounds = num;
-        }
+        },
     }
 });
 
@@ -173,6 +208,8 @@ function get_max_text_width (strings, font) {
 
 let endscreen_data = {};
 
+
+//todo order button
 Vue.component("game",{
         //putting this in a table
         template: game_templ,
@@ -188,7 +225,6 @@ Vue.component("game",{
             //let test_elem = $(`<div style="display: inline-block"><span style="font:${fnt};width:${get_max_text_width([txt], fnt)}px;float: left;padding-top: 3px;">${txt}</span><span style="font: ${query_text_font}">query_text</span></div>`);
 
             let points_span_width = get_max_text_width(["100 points: "], table_header_font);
-
             return {
                 active: true,
                 teams: teams,
@@ -202,7 +238,10 @@ Vue.component("game",{
                 alert_templ: new Global_Comps(),
                 table_cell_padding: table_cell_padding,
                 autosave: false,
-                rounds: gamescreen_data.rounds
+                rounds: gamescreen_data.rounds,
+                theme: gamescreen_data.theme,
+                game_ended: false,
+                next_round_btn_txt:"Submit"
             }
         },
         mounted: function(){
@@ -233,7 +272,8 @@ Vue.component("game",{
                 return JSON.stringify({
                     teams: this.teams,
                     queries: this.queries,
-                    rounds: this.rounds
+                    rounds: this.rounds,
+                    theme: this.theme
                 });
             },
             rounds_remaining: function () {
@@ -261,7 +301,6 @@ Vue.component("game",{
                 };
                 return ret;
             },
-
         },
         methods:{
             add_query_row: function(row) {
@@ -284,50 +323,60 @@ Vue.component("game",{
                 }
             },
             submit_query: function(){
-                let terms = [];
-                this.teams.forEach((e) => {
-                    let str = this.query_form[e.num];
-                    if (str === undefined){
-                        terms.push("")
-                    }else{
-                        terms.push(str.replace(/,/g, "").trim());
-                        this.query_form[e.num] = "";
-                    }
-                });
-                if (terms.indexOf("") !== -1){
-                    this.show_msg(this.alert_templ.get_alert_info("All terms need to be filled in to submit."));
-                    return;
-                }
-
-                function query_server() {
-                    let server_url = "http://18.197.12.243:5000/";
-                    server_url += "?";
-                    let q_str = "q=";
-                    server_url += q_str + terms[0];
-                    if (terms.length > 1){
-                        for(let i in _.range(1, terms.length)){
-                            server_url += "&" + q_str + terms[+i+1];
+                if(!this.game_ended){
+                    let terms = [];
+                    for (let i in _.range(this.teams.length)){
+                        let term = clean_str(this.query_form[this.teams[i].num]);
+                        if (term === undefined || term === ""){
+                            this.show_msg(this.alert_templ.get_alert_info("All terms need to be filled in to submit."));
+                            return;
+                        }else if(contains_spaces(term)){
+                            this.show_msg(this.alert_templ.get_alert_info("Terms can't contain spaces."));
+                            return;
+                        }else{
+                            terms.push(term);
                         }
                     }
-                    return JSON.parse(httpGet(server_url));// see jquery cors bug in notes
+
+                    let table_row = [];
+                    let theme = this.theme;
+                    terms = terms.map((term) => {return theme + " " + term});
+                    let result = (function query_server() {
+                        let server_url = "http://18.197.12.243:5000/";
+                        server_url += "?";
+                        let q_str = "q=";
+                        server_url += q_str + terms[0];
+                        if (terms.length > 1){
+                            for(let i in _.range(terms.length)){//lodash's range(1, n) doesn't seem to work correctly
+                                server_url += "&" + q_str + terms[+i+1];
+                            }
+                        }
+                        let json =  httpGet(server_url);
+                        return JSON.parse(json);// see jquery cors bug in notes
+                    })();
+
+                    this.teams.forEach((team) => {this.query_form[team.num] = ""});
+                    for (let i in _.range(terms.length)){
+                        table_row.push(this.get_new_query_item(result[i], terms[i]))
+                    }
+                    this.add_query_row(table_row);
+                    this.save_cookie();
                 }
-                let table_row = [];
-                let result = query_server();
-                for (let i in _.range(terms.length)){
-                    table_row.push(this.get_new_query_item(result[i], terms[i]))
-                }
-                this.add_query_row(table_row);
-                this.save_cookie();
                 this.check_game_end();
             },
             check_game_end: function(){
                 if (this.rounds_remaining === 0){
-                    this.active = false;
-                    endscreen_data = this.game_result;
-                    if(use_templates_from_js){
-                        document.cookie = "";
+                    if (this.game_ended){
+                        this.active = false;
+                        endscreen_data = this.game_result;
+                        if(use_templates_from_js){
+                            document.cookie = "";
+                        }
+                        open_endscreen();
+                    }else{
+                        this.game_ended = true;
+                        this.next_round_btn_txt = "End game"
                     }
-                    open_endscreen();
                 }
             },
             get_url: function(query){
@@ -356,6 +405,7 @@ Vue.component("game",{
             load_cookie:function () {
                 let cookie = document.cookie;
                 cookie = JSON.parse(cookie);
+                this.theme = cookie.theme;
                 this.teams = cookie.teams;
                 cookie.queries.forEach((q) => {this.add_query_row(q)});
                 this.rounds = cookie.rounds;
@@ -367,14 +417,12 @@ Vue.component("game",{
     }
 );
 
-
 function open_gamescreen(){
 
     let game_screen = new Vue({
         el: '#game_screen'
     });
 }
-
 
 Vue.component("end_screen",{
         //putting this in a table
@@ -384,9 +432,6 @@ Vue.component("end_screen",{
         },
         mounted: function(){
             show_confetti();
-        },
-        computed:{
-
         },
         methods:{
             restart_game: function () {
