@@ -54,5 +54,12 @@
         <button type="button" class="btn btn-warning" style="height: 50px;">Load game</button>
       </div>
     </div>
+    <div style="margin-top: 200px; margin-bottom: 100px; text-align: center">
+      <h1 >Rules</h1>
+      <span>It's not exactly the same, but you'll get the idea.</span>
+      <div style="margin: auto;width: 427px">
+        <iframe width="427" height="240" src="https://www.youtube.com/embed/n9bqcK-nVRk?list=PLbIc1971kgPCjKm56j_tNsetBn3PA5GaY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+    </div>
   </div>
 </div>

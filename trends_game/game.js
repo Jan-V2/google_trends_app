@@ -3,7 +3,7 @@ let startscreen_templ;
 let game_templ;
 let end_screen;
 
-let use_templates_from_js = false;
+let use_templates_from_js = true;
 
 if (use_templates_from_js){
     startscreen_templ = vue_templates.start_screen;
@@ -22,7 +22,13 @@ let startscreen_active = true;
 let load_old_game = false;
 let gamescreen_data = {};
 
-function clean_str(str) {return str.trim().replace(",", "").replace("?", "")}
+function clean_str(str) {
+    if (str === undefined){
+        return ""
+    }else{
+        return str.trim().replace(",", "").replace("?", "")
+    }
+}
 
 function contains_spaces(string) {
     return /\s/.test(string);
@@ -208,9 +214,8 @@ function get_max_text_width (strings, font) {
 
 let endscreen_data = {};
 
-
-//todo order button
-Vue.component("game",{
+//todo save on check
+Vue.component("game", {
         //putting this in a table
         template: game_templ,
         data: function () {
@@ -223,8 +228,10 @@ Vue.component("game",{
             let min_col_width = get_max_text_width(teams.map((t) => {return t.name}) , table_header_font) + table_cell_padding;
             //let fnt = table_header_font;
             //let test_elem = $(`<div style="display: inline-block"><span style="font:${fnt};width:${get_max_text_width([txt], fnt)}px;float: left;padding-top: 3px;">${txt}</span><span style="font: ${query_text_font}">query_text</span></div>`);
-
             let points_span_width = get_max_text_width(["100 points: "], table_header_font);
+            let order_btn_txt = ["Before", "After"];
+            let order_btn_strings = {};
+            teams.forEach((team) => {order_btn_strings[team.num] = order_btn_txt[0]});
             return {
                 active: true,
                 teams: teams,
@@ -241,7 +248,10 @@ Vue.component("game",{
                 rounds: gamescreen_data.rounds,
                 theme: gamescreen_data.theme,
                 game_ended: false,
-                next_round_btn_txt:"Submit"
+                next_round_btn_txt:"Submit",
+                order_strings: order_btn_txt,
+                order_btn_strings: order_btn_strings
+
             }
         },
         mounted: function(){
@@ -273,7 +283,9 @@ Vue.component("game",{
                     teams: this.teams,
                     queries: this.queries,
                     rounds: this.rounds,
-                    theme: this.theme
+                    theme: this.theme,
+                    order_btn_strings: this.order_btn_strings,
+                    game_ended: this.game_ended
                 });
             },
             rounds_remaining: function () {
@@ -281,7 +293,7 @@ Vue.component("game",{
             },
             winning_team_idx: function () {
                 let totals = this.points_totals;
-                let highest_found = 0;
+                let highest_found = -1;
                 let highest_idx;
                 for (let i in _.range(totals.length)){
                     if (totals[i] > highest_found){
@@ -301,6 +313,10 @@ Vue.component("game",{
                 };
                 return ret;
             },
+            get_order_btn_txt: function (team_num) {
+                console.log("doing");
+                return this.order_btn_strings[0];
+            }
         },
         methods:{
             add_query_row: function(row) {
@@ -334,13 +350,19 @@ Vue.component("game",{
                             this.show_msg(this.alert_templ.get_alert_info("Terms can't contain spaces."));
                             return;
                         }else{
-                            terms.push(term);
+                            //checks order
+                            switch (this.order_strings.indexOf(this.order_btn_strings[this.teams[i].num])) {
+                                case 0:
+                                    terms.push(this.theme + " " + term);
+                                    break;
+                                case 1:
+                                    terms.push(term + " " + this.theme);
+                                    break;
+                            }
                         }
                     }
 
                     let table_row = [];
-                    let theme = this.theme;
-                    terms = terms.map((term) => {return theme + " " + term});
                     let result = (function query_server() {
                         let server_url = "http://18.197.12.243:5000/";
                         server_url += "?";
@@ -351,16 +373,17 @@ Vue.component("game",{
                                 server_url += "&" + q_str + terms[+i+1];
                             }
                         }
-                        let json =  httpGet(server_url);
-                        return JSON.parse(json);// see jquery cors bug in notes
+                        let json =  httpGet(server_url);// see jquery cors bug in notes
+                        return JSON.parse(json);
                     })();
-
                     this.teams.forEach((team) => {this.query_form[team.num] = ""});
                     for (let i in _.range(terms.length)){
                         table_row.push(this.get_new_query_item(result[i], terms[i]))
                     }
                     this.add_query_row(table_row);
-                    this.save_cookie();
+                    if (this.autosave){
+                        this.save_cookie();
+                    }
                 }
                 this.check_game_end();
             },
@@ -398,25 +421,36 @@ Vue.component("game",{
                 $("#message_div").html(msg_html)
             },
             save_cookie:function () {
-                if (this.autosave){
-                    document.cookie = this.savegame_string;
-                }
+                document.cookie = this.savegame_string;
             },
             load_cookie:function () {
                 let cookie = document.cookie;
+                if(cookie === ""){
+                    this.show_msg(this.alert_templ.get_alert_warning("could not load game. cookie empty"))
+                }
+                cookie = cookie.replace(/^.*?{/, "{");// remove google analytics string
                 cookie = JSON.parse(cookie);
                 this.theme = cookie.theme;
                 this.teams = cookie.teams;
                 cookie.queries.forEach((q) => {this.add_query_row(q)});
                 this.rounds = cookie.rounds;
+                this.order_btn_strings = cookie.order_btn_strings;
+                this.game_ended = cookie.game_ended;
             },
-            test:function () {
-                console.log(this.winning_team_idx);
-            }
+            switch_order_btn_txt:function (team_num) {
+                switch (this.order_strings.indexOf(this.order_btn_strings[team_num])) {
+                    case 0:
+                        this.order_btn_strings[team_num] = this.order_strings[1];
+                        break;
+                    case 1:
+                        this.order_btn_strings[team_num] = this.order_strings[0];
+                        break;
+                }
+                this.$forceUpdate();
+            },
         }
     }
 );
-
 function open_gamescreen(){
 
     let game_screen = new Vue({

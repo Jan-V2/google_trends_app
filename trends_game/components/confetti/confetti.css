@@ -7,7 +7,7 @@ html, body {
 #confetti{
     position: absolute;
     left: 0;
-    top: 0;
+    top: 60px;
     height: 100%;
     width: 100%;
     pointer-events:none;

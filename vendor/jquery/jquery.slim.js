@@ -875,7 +875,7 @@ function markFunction( fn ) {
 }
 
 /**
- * Support testing using an element
+ * Support order_btn_strings using an element
  * @param {Function} fn Passed the created element and returns a boolean result
  */
 function assert( fn ) {

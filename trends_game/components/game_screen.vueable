@@ -43,12 +43,17 @@
     <form style="max-width: 800px;margin: auto" >
       <div class="row">
         % v-for="team in teams" v-bind:class="input_field_row_class"  =>
+        <div>
         <span>
-         <span>{{team.name}}</span>
+         <span>Team: {{team.name}}</span>
          <div class="clearfix" style="padding-top: 4px;"></div>
          % v-model="query_form[team.num]" =>
-         <input type="text"/>
+         <input type="text" class="team_row_width"/>
         </span>
+          <div class="clearfix"></div>
+          % @click="switch_order_btn_txt(team.num)" :style="{ backgroundColor: team.color, borderColor: team.color,  color: 'rgba(255,255,255,0.66)'}" =>
+          <button type="button" class="btn team_row_width" >{{order_btn_strings[team.num]}} theme term</button>
+        </div>
       </div>
       <div class="clearfix"></div>
       <button type="submit">{{next_round_btn_txt}}</button>
@@ -57,9 +62,10 @@
       <label>
         % v-model="autosave" =>
         <input type="checkbox"/>
-        Autosave the game to a cookie.
+        Autosave game to a cookie.
       </label>
     </div>
+    <div style="height: 200px"></div>
   </div>
   <!--% @click="test()" =>
   <button>test</button>-->

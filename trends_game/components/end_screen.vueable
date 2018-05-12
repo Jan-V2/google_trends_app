@@ -6,5 +6,9 @@
     <h2>They won with a score of {{winning_score}} points!</h2>
     % v-for="i in _.range(links.length)" @click="open_link(links[i])" =>
     <button class="btn btn-primary">Link round {{i + 1}}</button>
+    <div style="height: 30px" class="clearfix"></div>
+    % @click="restart_game()" =>
+    <button class="btn btn-secondary" style="margin: auto;">Restart game</button>
   </div>
+  <div style="height: 200px"></div>
 </div>

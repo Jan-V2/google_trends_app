@@ -1,8 +1,3 @@
-the rules
+The google trends game build in vue.
 
-pick teams 
-
-each team picks a name
-
-each team picks a term and then submit is clicked.
-each team gets points and 
+It's basically this but in the browser: https://www.youtube.com/watch?v=n9bqcK-nVRk&index=6&list=PLbIc1971kgPCjKm56j_tNsetBn3PA5GaY.

@@ -57,3 +57,10 @@ td span {
     padding: 0 !important;
     margin: 0 !important;
 }
+
+
+.team_row_width{
+    width: 100%;
+    max-width: 300px;
+}
+
